@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{621E81C5-F278-4B4E-833B-A328DDC92434}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.csproj", "{CAD8875E-35B7-49C5-841D-0945B2CC5751}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{3BDC37E5-0980-4F28-9886-1BC4606D73AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Tests", "tests\Core.Tests\Core.Tests.csproj", "{4A4B4FA6-3B1A-4604-98D9-3EBB7729E249}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CAD8875E-35B7-49C5-841D-0945B2CC5751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAD8875E-35B7-49C5-841D-0945B2CC5751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAD8875E-35B7-49C5-841D-0945B2CC5751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAD8875E-35B7-49C5-841D-0945B2CC5751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4A4B4FA6-3B1A-4604-98D9-3EBB7729E249}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4A4B4FA6-3B1A-4604-98D9-3EBB7729E249}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4A4B4FA6-3B1A-4604-98D9-3EBB7729E249}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4A4B4FA6-3B1A-4604-98D9-3EBB7729E249}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CAD8875E-35B7-49C5-841D-0945B2CC5751} = {621E81C5-F278-4B4E-833B-A328DDC92434}
+		{4A4B4FA6-3B1A-4604-98D9-3EBB7729E249} = {3BDC37E5-0980-4F28-9886-1BC4606D73AD}
+	EndGlobalSection
+EndGlobal
