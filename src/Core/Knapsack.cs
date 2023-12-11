@@ -1,90 +1,75 @@
-﻿namespace Core;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
-// TODO: Improve readability and comments for everything
+namespace Core;
+
+/// <summary>
+/// Solves the knapsack problem using dynamic programming.
+/// </summary>
+/// <remarks>
+/// Sources:
+/// <list type="bullet">
+///     <item>
+///         <a href="https://en.wikipedia.org/wiki/Knapsack_problem#0-1_knapsack_problem">Wikipedia</a>
+///     </item>
+///     <item>
+///         <a href="https://medium.com/@fabianterh/how-to-solve-the-knapsack-problem-with-dynamic-programming-eb88c706d3cf">
+///             Medium (Fabian Terh)
+///         </a>
+///     </item>
+/// </list>
+/// </remarks>
+[PublicAPI]
 public static class Knapsack
 {
-    // Class because we want reference semantics, i.e. items are different even if they have the same value and weight
-    public class Item(int value, int weight)
-    {
-        public int Value { get; } = value;
-        public int Weight { get; } = weight;
-    }
+    public static Solutions Solve(IEnumerable<Item> items, int maxCapacity)
+        => Solve(items.ToArray(), maxCapacity);
     
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <remarks>
-    /// Sources:
-    /// <list type="bullet">
-    ///     <item>
-    ///         <a href="https://en.wikipedia.org/wiki/Knapsack_problem#0-1_knapsack_problem">Wikipedia</a>
-    ///     </item>
-    ///     <item>
-    ///         <a href="https://medium.com/@fabianterh/how-to-solve-the-knapsack-problem-with-dynamic-programming-eb88c706d3cf">
-    ///             Medium (Fabian Terh)
-    ///         </a>
-    ///     </item>
-    /// </list>
-    /// </remarks>
-    /// <param name="values"></param>
-    /// <param name="weights"></param>
-    /// <param name="knapsackCapacity"></param>
-    /// <returns></returns>
-    public static int[,] MaxValueSolutions(IEnumerable<Item> items, int knapsackCapacity)
+    [SuppressMessage(
+        "SonarLint",
+        "S1116: Empty statements should be removed",
+        Justification = "False positive (C# 12 List pattern)")]
+    [SuppressMessage(
+        "SonarLint",
+        "S1481: Unused local variables should be removed",
+        Justification = "False positive (C# 12 List pattern)")]
+    public static Solutions Solve(Item[] items, int maxCapacity)
     {
-        // TODO: Add comments and improve readability
-        var itemsArray = items.ToArray();
+        var solutions = new Solutions(items.Length, maxCapacity);
         
-        var solutions = new int[itemsArray.Length + 1, knapsackCapacity + 1];
-
-        for (var i = 0; i <= itemsArray.Length; i++)
+        // We start at 1 in both loops because row and column 0 are empty (no items or no capacity). This effectively
+        // means we "1-based" the items array.
+        for (var itemNumber = 1; itemNumber <= items.Length; itemNumber++)
         {
-            for (var c = 0; c <= knapsackCapacity; c++)
+            for (var capacity = 1; capacity <= maxCapacity; capacity++)
             {
-                if (i == 0 || c == 0)
+                var item = items[itemNumber - 1];
+                var solutionWithoutItem = solutions[itemNumber - 1, capacity];
+                
+                // See if we can include the item in the solution (i.e. there is enough capacity for it). If we can't,
+                // the solutions is the same as the solution without the item.
+                if (item.Weight > capacity)
                 {
-                    solutions[i, c] = 0;
+                    solutions[itemNumber, capacity] = solutionWithoutItem;
+                    continue;
                 }
-                else if (itemsArray[i - 1].Weight <= c)
-                {
-                    solutions[i, c] = Math.Max(itemsArray[i - 1].Value + solutions[i - 1, c - itemsArray[i - 1].Weight], solutions[i - 1, c]);
-                }
-                else
-                {
-                    solutions[i, c] = solutions[i - 1, c];
-                }
+                
+                // If we choose to include the item, we need to subtract its weight from the capacity, which gives
+                // us the remaining capacity. We then look up the solution for the remaining capacity (without using
+                // the item) and add the item's value to it.
+                var solutionWithRemainingCapacity = solutions[itemNumber - 1, capacity - item.Weight];
+                    
+                // We now compare the solution with the item (combined with the solution for the remaining capacity)
+                // to the solution without the item. If the solution with the item is better, we use it, otherwise
+                // we use the solution without the item.
+                var solutionWithItem = new Solution([..solutionWithRemainingCapacity.Items, item]);
+                    
+                solutions[itemNumber, capacity] = solutionWithItem.Value > solutionWithoutItem.Value
+                    ? solutionWithItem
+                    : solutionWithoutItem;
             }
         }
 
         return solutions;
-    }
-
-    public static (int i, int j) LowerBoundItems(IEnumerable<Item> items, int knapsackCapacity)
-    {
-        // TODO: Implement
-        return (0, 0);
-    }
-
-    public static IReadOnlyList<Item> KnapsackItems(IEnumerable<Item> items, int i, int j)
-    {
-        var itemsArray = items.ToArray();
-        var solutions = MaxValueSolutions(itemsArray, j);
-        return KnapsackItemsRecursive(itemsArray, solutions, i, j);
-    }
-    
-    private static IReadOnlyList<Item> KnapsackItemsRecursive(Item[] items, int[,] solutions, int i, int j)
-    {
-        if (i == 0 || j == 0)
-        {
-            return Array.Empty<Item>();
-        }
-        
-        if (solutions[i, j] > solutions[i - 1, j])
-        {
-            var item = items[i];
-            return KnapsackItemsRecursive(items, solutions, i - 1, j - item.Weight).Append(item).ToList();
-        }
-        
-        return KnapsackItemsRecursive(items, solutions, i - 1, j);
     }
 }

@@ -10,11 +10,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="FluentAssertions" />
         <PackageReference Include="Microsoft.NET.Test.Sdk"/>
         <PackageReference Include="NUnit"/>
         <PackageReference Include="NUnit3TestAdapter"/>
         <PackageReference Include="NUnit.Analyzers"/>
         <PackageReference Include="coverlet.collector"/>
+        <PackageReference Include="Relaxdays.TestUtilities.Scenarios" />
     </ItemGroup>
 
     <ItemGroup>
