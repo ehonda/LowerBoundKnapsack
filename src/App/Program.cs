@@ -1,10 +1,14 @@
 ﻿using System.Globalization;
+using System.Text;
 using Core;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
 Item[] items = [new(10, 5), new(40, 4), new(30, 6), new(50, 3)];
 const int maxCapacity = 9;
+
+// Make Emoji work in PowerShell, see: https://github.com/spectreconsole/spectre.console/issues/113
+Console.OutputEncoding = Encoding.UTF8;
 
 var solutions = Knapsack.Solve(items, maxCapacity);
 
