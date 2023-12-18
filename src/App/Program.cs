@@ -20,8 +20,9 @@ var solutions = Knapsack.Solve(items, maxCapacity);
 //
 //      [Item Number Labels, Capacity 1, ... Capacity Max]
 //
-// Which gives us a total of maxCapacity + 2 columns.
+// Which gives us a total of maxCapacity + 1 columns.
 // TODO: Use distinct symbols for item number and number of items in a solution
+// TODO: Make borders configurable so we can print markdown tables
 var table = new Table()
     .AddColumns(Enumerable
         .Range(0, maxCapacity + 1)
@@ -41,12 +42,14 @@ for (var itemNumber = 1; itemNumber <= solutions.ItemCount; itemNumber++)
         {
             var solution = solutions[itemNumber, capacity];
 
-            var rows = new Rows(
-                new Text($"💲: {solution.Value.ToString("0.00", CultureInfo.InvariantCulture)}"),
-                new Text($"🚚: {solution.Weight}"),
-                new Text($"📦: {solution.Items.Count}"));
+            var style = solution.Items.Count > 0 ? Style.Plain : new(Color.Grey23);
 
-            return new Panel(rows).RoundedBorder() as IRenderable;
+            var rows = new Rows(
+                new Text($"💲: {solution.Value.ToString("0.00", CultureInfo.InvariantCulture)}", style),
+                new Text($"🚚: {solution.Weight}", style),
+                new Text($"📦: {solution.Items.Count}", style));
+
+            return new Panel(rows).RoundedBorder().BorderStyle(style) as IRenderable;
         })
         .ToArray();
 
