@@ -4,9 +4,9 @@ using Core;
 using Spectre.Console;
 using Spectre.Console.Rendering;
 
-// S1116: Empty statements should be removed
-// Justification: False positive (See e.g.: https://community.sonarsource.com/t/105285)
-#pragma warning disable S1116
+// S3878: Arrays should not be created for params parameters
+// Justification: False positive, we're not passing elements but using C# 12's list patterns
+#pragma warning disable S3878
 
 Item[] items = [new(10, 5), new(40, 4), new(30, 6), new(50, 3)];
 const int maxCapacity = 9;
